@@ -1,1 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Irrigation System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-color: rgb(219, 228, 220);
+            color: #333;
+           
+        }
+        header {
+            background-color: #00992e;
+            color: rgb(163, 211, 86);
+            padding: 20px 0;
+            text-align: center;
+        }
+        nav {
+            background: #4c9ddf;
+            color: rgb(131, 160, 144);
+            padding: 10px;
+            text-align: center;
+        }
+        
+        nav a {
+            color: rgb(255, 255, 255);
+            text-decoration: none;
+            margin: 0 15px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        section {
+            padding: 20px;
+            background: rgb(219, 228, 220);
+            margin: auto;
+            max-width: 1000px;
+            border-radius: 0px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        footer {
+            background: #3db2c2;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+    </style>
+</head>
+<body>
 
+    <header>
+        <h1>Smart Irrigation System Project</h1>
+        <p>Automated and Efficient Watering Solution</p>
+    </header>
+ 
+    <nav>
+        <a href="#profile">Profile</a>
+        <a href="#introduction">Introduction</a>
+        <a href="#abstract">Abstract</a>
+        <a href="#implementation">Implementation</a>
+        <a href="#working">Working Principle</a>
+        <a href="#details">Implementation Details</a>
+    </nav>
+    </div>
+    </div>
+
+      <div style="height:60%; text-align:center; padding:40px 20;" >
+            <h1  style="color:rgb(72, 75, 71); line-height:1.4;"><u>PROJECT OWNERS</u></h1>
+            
+            </div> 
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; padding:20px; max-width:900px; margin:20px auto;">
+      
+      <div style="background-color:#00992e; border-radius:10px; padding:10px; text-align:center;">
+              
+          <h2>Kevin NIYODUSENGA</h2>
+            <img src="c:\Users\pc\Downloads\KEVIN.jpeg" alt="" style="width:200px; border-radius:10%; margin-top:10px;">
+        </div>
+        <div style="background-color:#00992e; border-radius:10px; padding:10px; text-align:center;">
+            <h2>Denyse MANISHIMWE</h2>
+            <img src="c:\Users\pc\Downloads\G1.jpeg" alt="" style="width:200px; border-radius:10%; margin-top:10px;">
+        </div>
+    </div>
+
+    <section id="profile">
+        <h2>Project Profile</h2>
+        <p><strong>Project Title:</strong> Smart Irrigation System</p>
+        <p><strong>Developers:</strong>NIYODUSENGA Kevin & MANISHIMWE Denyse</p>
+        <p><strong>Institution:</strong>VTLABS GROUP</p>
+        <p><strong>Supervisor:</strong>Dushiminana Alexandre</p>
+        <p><strong>Date:</strong>../../2025</p>
+    </section>
+
+    <section id="introduction">
+         <img src="c:\Users\pc\Downloads\Smart-Irrigation-System-using-IoT-ddf (2).jpg" alt="System Setup">
+         
+        <h2>Project Introduction</h2>
+        <p>
+            The Smart Irrigation System is a modern approach to agricultural irrigation that aims to conserve water
+            and ensure crops receive the optimal amount of moisture. This project uses sensors and automation to control 
+            water flow based on soil moisture levels.
+           
+        </p>
+        <p>IMAGE OF SMART IRRIGATION SYSTEM BLOCK DIAGRAM  DESIGNED IN EdrawMax </p>
+         <img src="c:\Users\pc\Pictures\Drawing1.jpg" alt="System Setup">
+         <p>Code used before put in Iot</p>
+        <per> 
+            <code>
+                <pre>
+<pre>
+
+<font color="#5e6d03">#include</font> <font color="#434f54">&lt;</font><font color="#000000">DHT11</font><font color="#434f54">.</font><font color="#000000">h</font><font color="#434f54">&gt;</font>
+<font color="#000000">DHT11</font> <font color="#000000">dht11</font><font color="#000000">(</font><font color="#000000">32</font><font color="#000000">)</font><font color="#000000">;</font> 
+
+
+<font color="#00979c">int</font> <font color="#000000">sensor</font> <font color="#434f54">=</font><font color="#000000">34</font><font color="#000000">;</font>
+<font color="#00979c">int</font> <font color="#000000">pump</font><font color="#434f54">=</font><font color="#000000">27</font><font color="#000000">;</font>
+<font color="#00979c">int</font> <font color="#000000">buzzer</font><font color="#434f54">=</font><font color="#000000">12</font><font color="#000000">;</font>
+<font color="#00979c">int</font> <font color="#000000">green</font><font color="#434f54">=</font><font color="#000000">13</font><font color="#000000">;</font>
+<font color="#00979c">int</font> <font color="#000000">threshold</font><font color="#434f54">=</font><font color="#000000">2000</font><font color="#000000">;</font>
+<font color="#00979c">int</font> <font color="#000000">threshod</font><font color="#434f54">=</font><font color="#000000">1000</font><font color="#000000">;</font>
+<font color="#00979c">void</font> <font color="#5e6d03">setup</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font>
+<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">begin</font><font color="#000000">(</font><font color="#000000">115200</font><font color="#000000">)</font><font color="#000000">;</font>
+<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">green</font><font color="#434f54">,</font><font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">buzzer</font><font color="#434f54">,</font><font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">pump</font><font color="#434f54">,</font><font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">sensor</font><font color="#434f54">,</font><font color="#00979c">INPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">green</font><font color="#434f54">,</font><font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
+<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">buzzer</font><font color="#434f54">,</font><font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
+<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">pump</font><font color="#434f54">,</font><font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
+<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;SYSTEM IRRIGATION SYSTEM &#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+
+<font color="#000000">}</font>
+
+<font color="#00979c">void</font> <font color="#5e6d03">loop</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font>
+ &nbsp;&nbsp;<font color="#00979c">float</font> <font color="#000000">temperature</font> <font color="#434f54">=</font> <font color="#000000">dht11</font><font color="#434f54">.</font><font color="#d35400">readTemperature</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font> 
+ &nbsp;&nbsp;<font color="#00979c">float</font> <font color="#000000">humidity</font> <font color="#434f54">=</font> <font color="#000000">dht11</font><font color="#434f54">.</font><font color="#d35400">readHumidity</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font> 
+ &nbsp;&nbsp;<font color="#00979c">float</font> <font color="#000000">moisturevalue</font><font color="#434f54">=</font><font color="#d35400">analogRead</font><font color="#000000">(</font><font color="#000000">sensor</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;moisture in soil:&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#000000">moisturevalue</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;%&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;temperature &#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#000000">temperature</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;*C&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;humidity &nbsp;&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#000000">humidity</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;%&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;
+ &nbsp;
+ &nbsp;<font color="#5e6d03">if</font><font color="#000000">(</font><font color="#000000">moisturevalue</font><font color="#434f54">&gt;=</font><font color="#000000">threshold</font><font color="#000000">)</font><font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">pump</font><font color="#434f54">,</font><font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;WATERING&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+ &nbsp;
+ &nbsp;&nbsp;
+ &nbsp;<font color="#5e6d03">else</font> <font color="#5e6d03">if</font><font color="#000000">(</font><font color="#000000">moisturevalue</font><font color="#434f54">&gt;=</font><font color="#000000">3000</font><font color="#000000">)</font><font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">buzzer</font><font color="#434f54">,</font><font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;DRY SOIL&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ &nbsp;<font color="#000000">}</font> &nbsp;
+ &nbsp;&nbsp;&nbsp;<font color="#5e6d03">else</font><font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">buzzer</font><font color="#434f54">,</font><font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">pump</font><font color="#434f54">,</font><font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">green</font><font color="#434f54">,</font><font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+
+ &nbsp;&nbsp;&nbsp;<font color="#5e6d03">if</font> <font color="#000000">(</font><font color="#000000">temperature</font><font color="#434f54">&lt;=</font><font color="#000000">threshod</font><font color="#000000">)</font><font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">green</font><font color="#434f54">,</font><font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+ &nbsp;&nbsp;&nbsp;<font color="#5e6d03">else</font><font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">green</font><font color="#434f54">,</font><font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">10</font><font color="#000000">)</font><font color="#000000">;</font> &nbsp;
+ &nbsp;<font color="#000000">}</font>
+ &nbsp;
+ &nbsp;
+
+</pre>
+
+</pre>
+            </code>
+        </per>
+        <p>our circuit in proteus and connect them </p>
+        <img src="c:\Users\pc\Downloads\Smart-Irrigation-System-using-IoT-ddf.jpg" alt="System Setup">
+    </section>
+
+    <section id="abstract">
+        <h2>Abstract</h2>
+        <p>
+            This project presents a Smart Irrigation System designed to improve water management in agriculture.
+            It utilizes moisture sensors, microcontrollers, and automated water pumps to supply water only when necessary.
+            The goal is to minimize water wastage, reduce human effort, and improve crop health through efficient irrigation practices.
+        </p>
+    </section>
+
+    <section id="implementation">
+        <h2>Project Implementation</h2>
+        <p>
+            The system consists of sensors embedded in the soil, which monitor moisture levels in real time. These sensors are connected
+            to a microcontroller (such as Arduino or ESP32), which processes the data. When the moisture level falls below a certain
+            threshold, the system automatically activates a water pump to irrigate the crops.
+        </p>
+    </section>
+
+    <section id="working">
+        <h2>Working Principle</h2>
+        <p>
+            The system works on the principle of feedback control. Soil moisture sensors send analog signals to the microcontroller.
+            Based on the sensor input, the controller decides whether to turn on or off the water pump. An LCD display or web interface 
+            can show real-time data such as soil moisture levels and system status.
+            At the sametime, temperature and humidity are measured by DHT11, and all data is displayed local on the LCD and online on adafruit IO.
+        </p>
+    </section>
+
+    <section id="details">
+        <h2>Implementation Details & Photos</h2>
+        <p>
+            Below are some images of the running project and components used:
+        </p>
+        <ul>
+            <li>Soil Moisture Sensor</li>
+            <li>Microcontroller (e.g., Arduino UNO)</li>
+            <li>Water Pump</li>
+            <li>Relay Module</li>
+            <li>Power Supply</li>
+            <p>IMAGES OF COMPONENTS USED IN OUR PROJECT</p>
+        <P>solar panel used </P>
+        <img src="c:\Users\pc\Downloads\solar panel.jpeg" alt="System Setup">
+        <P>this solar panel used during our system located in swamp if our system loss power solar panel start to charge system until the system full charge</P>
+        <p>lcd used</p>
+        <img src="c:\Users\pc\Downloads\lcd.jpeg" alt="System Setup">
+        <p>this lcd used to display each information in system</p>
+        <p>ESP32 USED</p>
+        <img src="c:\Users\pc\Downloads\esp32.jpeg" alt="System Setup">
+        <p>this esp32 is microcontroller of system </p>
+        
+        </ul>
+
+        <p>
+            The project can be powered using a battery or solar panel, making it suitable for remote agricultural areas.
+            Future improvements could include IoT integration, smartphone control, and data logging.
+        </p>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Smart Irrigation System Project | All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
