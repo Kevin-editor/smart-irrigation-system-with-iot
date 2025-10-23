@@ -13,14 +13,14 @@ int green=13;
 int threshold=40;
 int threshod=1000;
 
-#define WLAN_SSID       "*********"   
-#define WLAN_PASS       "**********"  
+#define WLAN_SSID       "**********"   
+#define WLAN_PASS       "***********"  
 
 
 #define AIO_SERVER      "io.adafruit.com"
 #define AIO_SERVERPORT  1883 
-#define AIO_USERNAME  "***************"
-#define AIO_KEY       "*********************"
+#define AIO_USERNAME  "*************"
+#define AIO_KEY       "*************************"
 
 WiFiClient client;
 Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
@@ -86,7 +86,7 @@ void loop() {
   int temperature = dht11.readTemperature();
   int humidity = dht11.readHumidity();
   int moisturevalue=analogRead(sensor);
-  int moisturePercent = map(moisturevalue, 1023, 0, 0, 100);
+  int moisturePercent = map(moisturevalue, 4095, 1700, 0, 100);
 
   int result = dht11.readTemperatureHumidity(temperature, humidity);
 
