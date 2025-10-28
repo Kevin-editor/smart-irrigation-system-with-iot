@@ -1,5 +1,6 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
+#include <LiquidCrystal_I2C.h>
 
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
@@ -13,14 +14,16 @@ int green=13;
 int threshold=40;
 int threshod=1000;
 
+LiquidCrystal_I2C lcd(0x27, 16, 2); 
+
 #define WLAN_SSID       "**********"   
-#define WLAN_PASS       "***********"  
+#define WLAN_PASS       "**********"  
 
 
 #define AIO_SERVER      "io.adafruit.com"
 #define AIO_SERVERPORT  1883 
-#define AIO_USERNAME  "*************"
-#define AIO_KEY       "*************************"
+#define AIO_USERNAME  "**********"
+#define AIO_KEY       "**********"
 
 WiFiClient client;
 Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
@@ -42,6 +45,16 @@ pinMode(sensor,INPUT);
 digitalWrite(green,HIGH);
 digitalWrite(buzzer,LOW);
 digitalWrite(pump,LOW);
+
+ lcd.init();
+  lcd.backlight();
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("SMART IRRIGATION");
+  lcd.setCursor(0, 1);
+  lcd.print("SYSTEM STARTING");
+  delay(2000);
+  lcd.clear();
 Serial.print("SYSTEM IRRIGATION SYSTEM ");
 
  
@@ -86,9 +99,23 @@ void loop() {
   int temperature = dht11.readTemperature();
   int humidity = dht11.readHumidity();
   int moisturevalue=analogRead(sensor);
-  int moisturePercent = map(moisturevalue, 4095, 1700, 0, 100);
-
+  int moisturePercent = map(moisturevalue, 4095, 1700, 10, 100);
   int result = dht11.readTemperatureHumidity(temperature, humidity);
+
+   lcd.setCursor(0, 0);
+  lcd.print("Soil:");
+  lcd.print(moisturePercent);
+  lcd.print("%   ");
+
+  
+  lcd.setCursor(0, 1);
+  lcd.print("T:");
+  lcd.print(temperature);
+  lcd.print("C ");
+  lcd.print("H:");
+  lcd.print(humidity);
+  lcd.print("%");
+
 
 
   Serial.print(F("\nSending Humidity val "));
@@ -122,15 +149,20 @@ void loop() {
     digitalWrite(pump,HIGH);
     digitalWrite(buzzer,HIGH);
     digitalWrite(green,LOW);
-    Serial.println("WATERING");
+    lcd.setCursor(12, 0);
+    lcd.print("ON ");
+    Serial.println("PUMP: ON (Soil Dry)");
     }
    else{
       Serial.print(F("CLose pump "));
       digitalWrite(buzzer,LOW);
       digitalWrite(pump,LOW);
       digitalWrite(green,HIGH);
+    lcd.setCursor(12, 0);
+    lcd.print("OFF");
+    Serial.println("PUMP: OFF (Soil Wet)");
     } 
-
+  Serial.println("-----------------------------------");
   delay(5000); 
 }
 
