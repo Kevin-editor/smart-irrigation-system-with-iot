@@ -107,84 +107,152 @@
          
         <h2>Project Introduction</h2>
         <p>
-            The Smart Irrigation System is a modern approach to agricultural irrigation that aims to conserve water
-            and ensure crops receive the optimal amount of moisture. This project uses sensors and automation to control 
-            water flow based on soil moisture levels.
+            A Smart Irrigation System using ESP32 is a modern automatic watering system that helps farmers and gardeners manage water efficiently by using real-time data from environmental sensors. The main purpose of this system is to provide water to plants only when it is needed, reducing water waste and human effort.
+
+The ESP32 microcontroller is the core of this project because it has built-in Wi-Fi and Bluetooth, allowing the system to connect to the Internet of Things (IoT) platform. Through this connection, the system can send data about soil moisture, temperature, and humidity to an online dashboard such as Adafruit IO, where users can monitor the farm remotely and even control the pump from anywhere.
+
+The system works by using a soil moisture sensor to measure how wet or dry the soil is. When the moisture level falls below a certain threshold, the ESP32 automatically turns on the water pump. Once the soil becomes moist enough, the pump is turned off. A DHT11 sensor measures the surrounding temperature and humidity, helping users understand the environmental conditions affecting plant growth. The readings are displayed on an LCD (16x2) screen for local monitoring, and a buzzer gives alerts if soil moisture is too low.
+
+This ESP32-based system brings automation, IoT connectivity, and real-time monitoring into agriculture, making irrigation smarter, more efficient, and environmentally friendly. It demonstrates how embedded systems and IoT can be combined to support precision farming and sustainable agriculture.
            
         </p>
+         <section id="abstract">
+        <h2>Abstract</h2>
+        <p>
+            This project presents a Smart Irrigation System designed to improve water management in agriculture.
+            It utilizes moisture sensors, microcontrollers, and automated water pumps to supply water only when necessary.
+            The goal is to minimize water wastage, reduce human effort, and improve crop health through efficient irrigation practices.
+        </p>
+
+         <section id="working">
+        <h2>Working Principle</h2>
+        <p>
+            The system works on the principle of feedback control. Soil moisture sensors send analog signals to the microcontroller.
+            Based on the sensor input, the controller decides whether to turn on or off the water pump. An LCD display or web interface 
+            can show real-time data such as soil moisture levels and system status.
+            At the sametime, temperature and humidity are measured by DHT11, and all data is displayed local on the LCD and online on adafruit IO .
+        </p>
+    </section>
+    </section>
         <p>IMAGE OF SMART IRRIGATION SYSTEM BLOCK DIAGRAM  DESIGNED IN EdrawMax </p>
          <img src="Drawing1-removebg-preview.jpg" alt="System Setup">
+         <p>This SMART IRRIGATION SYSTEM BLOCK DIAGRAM shows a plan for an automatic plant watering system called "SIS." Think of it as a smart irrigation system. The whole system is powered by electricity, which is what the "POWER" block is for. The system uses two sensors to understand its environment: a "Soil Moisture Sensor" acts like a finger to check if the soil is dry, and a "DHT11" sensor acts like a tiny weather station to check the air temperature and humidity. All the information from these sensors is sent to the "ESP32," which is the brain of the operation. The brain makes all the decisions. If it decides the plants need water, it sends a command to the "Relay Circuit." You can think of the relay as a strong arm; the brain is smart but can't handle high power, so the relay does the heavy lifting of safely turning on the "Water Pump." Finally, the water pump is what actually waters the plants. So, in short, the system senses, thinks, and then acts completely on its own to keep plants perfectly watered.</p>
          <p>Code used before put in Iot</p>
         <per> 
             <code>
                 <pre>
 <pre>
 
+<pre>
+<font color="#5e6d03">#include</font> <font color="#434f54">&lt;</font><font color="#d35400">Wire</font><font color="#434f54">.</font><font color="#000000">h</font><font color="#434f54">&gt;</font>
+<font color="#5e6d03">#include</font> <font color="#434f54">&lt;</font><b><font color="#d35400">LiquidCrystal_I2C</font></b><font color="#434f54">.</font><font color="#000000">h</font><font color="#434f54">&gt;</font>
 <font color="#5e6d03">#include</font> <font color="#434f54">&lt;</font><font color="#000000">DHT11</font><font color="#434f54">.</font><font color="#000000">h</font><font color="#434f54">&gt;</font>
-<font color="#000000">DHT11</font> <font color="#000000">dht11</font><font color="#000000">(</font><font color="#000000">32</font><font color="#000000">)</font><font color="#000000">;</font> 
 
 
-<font color="#00979c">int</font> <font color="#000000">sensor</font> <font color="#434f54">=</font><font color="#000000">34</font><font color="#000000">;</font>
-<font color="#00979c">int</font> <font color="#000000">pump</font><font color="#434f54">=</font><font color="#000000">27</font><font color="#000000">;</font>
-<font color="#00979c">int</font> <font color="#000000">buzzer</font><font color="#434f54">=</font><font color="#000000">12</font><font color="#000000">;</font>
-<font color="#00979c">int</font> <font color="#000000">green</font><font color="#434f54">=</font><font color="#000000">13</font><font color="#000000">;</font>
-<font color="#00979c">int</font> <font color="#000000">threshold</font><font color="#434f54">=</font><font color="#000000">2000</font><font color="#000000">;</font>
-<font color="#00979c">int</font> <font color="#000000">threshod</font><font color="#434f54">=</font><font color="#000000">1000</font><font color="#000000">;</font>
+<font color="#5e6d03">#define</font> <font color="#000000">DHTPIN</font> <font color="#000000">2</font>
+<font color="#5e6d03">#define</font> <font color="#000000">SOIL_SENSOR_PIN</font> <font color="#000000">34</font>
+<font color="#5e6d03">#define</font> <font color="#000000">PUMP_PIN</font> <font color="#000000">27</font>
+<font color="#5e6d03">#define</font> <font color="#000000">BUZZER_PIN</font> <font color="#000000">12</font>
+<font color="#5e6d03">#define</font> <font color="#000000">GREEN_LED</font> <font color="#000000">13</font>
+
+
+<font color="#00979c">int</font> <font color="#000000">soilThresholdPercent</font> <font color="#434f54">=</font> <font color="#000000">40</font><font color="#000000">;</font> &nbsp;
+<font color="#00979c">int</font> <font color="#000000">tempThreshold</font> <font color="#434f54">=</font> <font color="#000000">30</font><font color="#000000">;</font> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+<b><font color="#d35400">LiquidCrystal_I2C</font></b> <font color="#000000">lcd</font><font color="#000000">(</font><font color="#000000">0x27</font><font color="#434f54">,</font> <font color="#000000">16</font><font color="#434f54">,</font> <font color="#000000">2</font><font color="#000000">)</font><font color="#000000">;</font> 
+
+
+<font color="#000000">DHT11</font> <font color="#000000">dht11</font><font color="#000000">(</font><font color="#000000">DHTPIN</font><font color="#000000">)</font><font color="#000000">;</font>
+
+
 <font color="#00979c">void</font> <font color="#5e6d03">setup</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font>
-<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">begin</font><font color="#000000">(</font><font color="#000000">115200</font><font color="#000000">)</font><font color="#000000">;</font>
-<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">green</font><font color="#434f54">,</font><font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
-<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">buzzer</font><font color="#434f54">,</font><font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
-<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">pump</font><font color="#434f54">,</font><font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
-<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">sensor</font><font color="#434f54">,</font><font color="#00979c">INPUT</font><font color="#000000">)</font><font color="#000000">;</font>
-<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">green</font><font color="#434f54">,</font><font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
-<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">buzzer</font><font color="#434f54">,</font><font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
-<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">pump</font><font color="#434f54">,</font><font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
-<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;SYSTEM IRRIGATION SYSTEM &#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">begin</font><font color="#000000">(</font><font color="#000000">115200</font><font color="#000000">)</font><font color="#000000">;</font>
 
+ &nbsp;<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">SOIL_SENSOR_PIN</font><font color="#434f54">,</font> <font color="#00979c">INPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">PUMP_PIN</font><font color="#434f54">,</font> <font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">BUZZER_PIN</font><font color="#434f54">,</font> <font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">GREEN_LED</font><font color="#434f54">,</font> <font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">PUMP_PIN</font><font color="#434f54">,</font> <font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">BUZZER_PIN</font><font color="#434f54">,</font> <font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">GREEN_LED</font><font color="#434f54">,</font> <font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
+
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">init</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">backlight</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">clear</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">setCursor</font><font color="#000000">(</font><font color="#000000">0</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;SMART IRRIGATION&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">setCursor</font><font color="#000000">(</font><font color="#000000">0</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;SYSTEM STARTING&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">2000</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">clear</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+
+ &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;SYSTEM READY...&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
 <font color="#000000">}</font>
 
-<font color="#00979c">void</font> <font color="#5e6d03">loop</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font>
- &nbsp;&nbsp;<font color="#00979c">float</font> <font color="#000000">temperature</font> <font color="#434f54">=</font> <font color="#000000">dht11</font><font color="#434f54">.</font><font color="#d35400">readTemperature</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font> 
- &nbsp;&nbsp;<font color="#00979c">float</font> <font color="#000000">humidity</font> <font color="#434f54">=</font> <font color="#000000">dht11</font><font color="#434f54">.</font><font color="#d35400">readHumidity</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font> 
- &nbsp;&nbsp;<font color="#00979c">float</font> <font color="#000000">moisturevalue</font><font color="#434f54">=</font><font color="#d35400">analogRead</font><font color="#000000">(</font><font color="#000000">sensor</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;moisture in soil:&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#000000">moisturevalue</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;%&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;temperature &#34;</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#000000">temperature</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;*C&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;humidity &nbsp;&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#000000">humidity</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;%&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;
- &nbsp;
- &nbsp;<font color="#5e6d03">if</font><font color="#000000">(</font><font color="#000000">moisturevalue</font><font color="#434f54">&gt;=</font><font color="#000000">threshold</font><font color="#000000">)</font><font color="#000000">{</font>
- &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">pump</font><font color="#434f54">,</font><font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;WATERING&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
- &nbsp;
- &nbsp;&nbsp;
- &nbsp;<font color="#5e6d03">else</font> <font color="#5e6d03">if</font><font color="#000000">(</font><font color="#000000">moisturevalue</font><font color="#434f54">&gt;=</font><font color="#000000">3000</font><font color="#000000">)</font><font color="#000000">{</font>
- &nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">buzzer</font><font color="#434f54">,</font><font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;DRY SOIL&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- &nbsp;<font color="#000000">}</font> &nbsp;
- &nbsp;&nbsp;&nbsp;<font color="#5e6d03">else</font><font color="#000000">{</font>
- &nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">buzzer</font><font color="#434f54">,</font><font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">pump</font><font color="#434f54">,</font><font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">green</font><font color="#434f54">,</font><font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
 
- &nbsp;&nbsp;&nbsp;<font color="#5e6d03">if</font> <font color="#000000">(</font><font color="#000000">temperature</font><font color="#434f54">&lt;=</font><font color="#000000">threshod</font><font color="#000000">)</font><font color="#000000">{</font>
- &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">green</font><font color="#434f54">,</font><font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
- &nbsp;&nbsp;&nbsp;<font color="#5e6d03">else</font><font color="#000000">{</font>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">green</font><font color="#434f54">,</font><font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">10</font><font color="#000000">)</font><font color="#000000">;</font> &nbsp;
+<font color="#00979c">void</font> <font color="#5e6d03">loop</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font>
+
+ &nbsp;<font color="#00979c">float</font> <font color="#000000">temperature</font> <font color="#434f54">=</font> <font color="#000000">dht11</font><font color="#434f54">.</font><font color="#d35400">readTemperature</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#00979c">float</font> <font color="#000000">humidity</font> <font color="#434f54">=</font> <font color="#000000">dht11</font><font color="#434f54">.</font><font color="#d35400">readHumidity</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#00979c">int</font> <font color="#000000">rawSoil</font> <font color="#434f54">=</font> <font color="#d35400">analogRead</font><font color="#000000">(</font><font color="#000000">SOIL_SENSOR_PIN</font><font color="#000000">)</font><font color="#000000">;</font> 
+
+
+ &nbsp;<font color="#00979c">int</font> <font color="#000000">soilPercent</font> <font color="#434f54">=</font> <font color="#d35400">map</font><font color="#000000">(</font><font color="#000000">rawSoil</font><font color="#434f54">,</font> <font color="#000000">4095</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#434f54">,</font> <font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font>
+
+ &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;Soil Moisture: &#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#000000">soilPercent</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34; %&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;Temperature: &#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#000000">temperature</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34; *C&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;Humidity: &#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#000000">humidity</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34; %&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">setCursor</font><font color="#000000">(</font><font color="#000000">0</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;Soil:&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#000000">soilPercent</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;% &nbsp;&nbsp;&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">setCursor</font><font color="#000000">(</font><font color="#000000">0</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;T:&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#000000">temperature</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;C &#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;H:&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#000000">humidity</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;%&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+
+ &nbsp;
+ &nbsp;<font color="#5e6d03">if</font> <font color="#000000">(</font><font color="#000000">soilPercent</font> <font color="#434f54">&lt;=</font> <font color="#000000">soilThresholdPercent</font><font color="#000000">)</font> <font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">PUMP_PIN</font><font color="#434f54">,</font> <font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">BUZZER_PIN</font><font color="#434f54">,</font> <font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">setCursor</font><font color="#000000">(</font><font color="#000000">12</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;ON &#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;PUMP: ON (Soil Dry)&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">}</font> <font color="#5e6d03">else</font> <font color="#000000">{</font>
+ &nbsp;&nbsp;
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">PUMP_PIN</font><font color="#434f54">,</font> <font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">BUZZER_PIN</font><font color="#434f54">,</font> <font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">setCursor</font><font color="#000000">(</font><font color="#000000">12</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;OFF&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;PUMP: OFF (Soil Wet)&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
  &nbsp;<font color="#000000">}</font>
- &nbsp;
- &nbsp;
+
+ 
+ &nbsp;<font color="#5e6d03">if</font> <font color="#000000">(</font><font color="#000000">temperature</font> <font color="#434f54">&lt;=</font> <font color="#000000">tempThreshold</font><font color="#000000">)</font> <font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">GREEN_LED</font><font color="#434f54">,</font> <font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">}</font> <font color="#5e6d03">else</font> <font color="#000000">{</font>
+ &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">GREEN_LED</font><font color="#434f54">,</font> <font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">}</font>
+
+ &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;-----------------------------------&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">1000</font><font color="#000000">)</font><font color="#000000">;</font>
+<font color="#000000">}</font>
+
+</pre>
 
 </pre>
 
@@ -195,14 +263,7 @@
         <img src="Smart-Irrigation-System-using-IoT-ddf.jpg" alt="System Setup">
     </section>
 
-    <section id="abstract">
-        <h2>Abstract</h2>
-        <p>
-            This project presents a Smart Irrigation System designed to improve water management in agriculture.
-            It utilizes moisture sensors, microcontrollers, and automated water pumps to supply water only when necessary.
-            The goal is to minimize water wastage, reduce human effort, and improve crop health through efficient irrigation practices.
-        </p>
-    </section>
+   
 
     <section id="implementation">
         <h2>Project Implementation</h2>
@@ -213,15 +274,7 @@
         </p>
     </section>
 
-    <section id="working">
-        <h2>Working Principle</h2>
-        <p>
-            The system works on the principle of feedback control. Soil moisture sensors send analog signals to the microcontroller.
-            Based on the sensor input, the controller decides whether to turn on or off the water pump. An LCD display or web interface 
-            can show real-time data such as soil moisture levels and system status.
-            At the sametime, temperature and humidity are measured by DHT11, and all data is displayed local on the LCD and online on adafruit IO.
-        </p>
-    </section>
+   
 
     <section id="details">
         <h2>Implementation Details & Photos</h2>
@@ -264,8 +317,10 @@
             <pre>
             <pre>
 <pre>
+<pre>
 <font color="#5e6d03">#include</font> <font color="#434f54">&lt;</font><b><font color="#d35400">WiFi</font></b><font color="#434f54">.</font><font color="#000000">h</font><font color="#434f54">&gt;</font>
 <font color="#5e6d03">#include</font> <font color="#434f54">&lt;</font><font color="#000000">WiFiClient</font><font color="#434f54">.</font><font color="#000000">h</font><font color="#434f54">&gt;</font>
+<font color="#5e6d03">#include</font> <font color="#434f54">&lt;</font><b><font color="#d35400">LiquidCrystal_I2C</font></b><font color="#434f54">.</font><font color="#000000">h</font><font color="#434f54">&gt;</font>
 
 <font color="#5e6d03">#include</font> <font color="#005c5f">&#34;Adafruit_MQTT.h&#34;</font>
 <font color="#5e6d03">#include</font> <font color="#005c5f">&#34;Adafruit_MQTT_Client.h&#34;</font>
@@ -279,14 +334,16 @@
 <font color="#00979c">int</font> <font color="#000000">threshold</font><font color="#434f54">=</font><font color="#000000">40</font><font color="#000000">;</font>
 <font color="#00979c">int</font> <font color="#000000">threshod</font><font color="#434f54">=</font><font color="#000000">1000</font><font color="#000000">;</font>
 
-<font color="#5e6d03">#define</font> <font color="#000000">WLAN_SSID</font> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#005c5f">&#34;*****&#34;</font> &nbsp;&nbsp;
-<font color="#5e6d03">#define</font> <font color="#000000">WLAN_PASS</font> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#005c5f">&#34;********&#34;</font> &nbsp;
+<b><font color="#d35400">LiquidCrystal_I2C</font></b> <font color="#000000">lcd</font><font color="#000000">(</font><font color="#000000">0x27</font><font color="#434f54">,</font> <font color="#000000">16</font><font color="#434f54">,</font> <font color="#000000">2</font><font color="#000000">)</font><font color="#000000">;</font> 
+
+<font color="#5e6d03">#define</font> <font color="#000000">WLAN_SSID</font> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#005c5f">&#34;**********&#34;</font> &nbsp;&nbsp;
+<font color="#5e6d03">#define</font> <font color="#000000">WLAN_PASS</font> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#005c5f">&#34;**********&#34;</font> &nbsp;
 
 
 <font color="#5e6d03">#define</font> <font color="#000000">AIO_SERVER</font> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#005c5f">&#34;io.adafruit.com&#34;</font>
 <font color="#5e6d03">#define</font> <font color="#000000">AIO_SERVERPORT</font> &nbsp;<font color="#000000">1883</font> 
-<font color="#5e6d03">#define</font> <font color="#000000">AIO_USERNAME</font> &nbsp;<font color="#005c5f">&#34;********&#34;</font>
-<font color="#5e6d03">#define</font> <font color="#000000">AIO_KEY</font> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#005c5f">&#34;**************&#34;</font>
+<font color="#5e6d03">#define</font> <font color="#000000">AIO_USERNAME</font> &nbsp;<font color="#005c5f">&#34;**********&#34;</font>
+<font color="#5e6d03">#define</font> <font color="#000000">AIO_KEY</font> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#005c5f">&#34;**********&#34;</font>
 
 <font color="#000000">WiFiClient</font> <font color="#d35400">client</font><font color="#000000">;</font>
 <b><font color="#d35400">Adafruit_MQTT_Client</font></b> <font color="#000000">mqtt</font><font color="#000000">(</font><font color="#434f54">&amp;</font><font color="#d35400">client</font><font color="#434f54">,</font> <font color="#000000">AIO_SERVER</font><font color="#434f54">,</font> <font color="#000000">AIO_SERVERPORT</font><font color="#434f54">,</font> <font color="#000000">AIO_USERNAME</font><font color="#434f54">,</font> <font color="#000000">AIO_KEY</font><font color="#000000">)</font><font color="#000000">;</font>
@@ -308,6 +365,16 @@
 <font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">green</font><font color="#434f54">,</font><font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
 <font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">buzzer</font><font color="#434f54">,</font><font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
 <font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">pump</font><font color="#434f54">,</font><font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
+
+ <font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">init</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">backlight</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">clear</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">setCursor</font><font color="#000000">(</font><font color="#000000">0</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;SMART IRRIGATION&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">setCursor</font><font color="#000000">(</font><font color="#000000">0</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;SYSTEM STARTING&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">2000</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">clear</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
 <b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;SYSTEM IRRIGATION SYSTEM &#34;</font><font color="#000000">)</font><font color="#000000">;</font>
 
  
@@ -353,8 +420,22 @@
  &nbsp;<font color="#00979c">int</font> <font color="#000000">humidity</font> <font color="#434f54">=</font> <font color="#000000">dht11</font><font color="#434f54">.</font><font color="#d35400">readHumidity</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
  &nbsp;<font color="#00979c">int</font> <font color="#000000">moisturevalue</font><font color="#434f54">=</font><font color="#d35400">analogRead</font><font color="#000000">(</font><font color="#000000">sensor</font><font color="#000000">)</font><font color="#000000">;</font>
  &nbsp;<font color="#00979c">int</font> <font color="#000000">moisturePercent</font> <font color="#434f54">=</font> <font color="#d35400">map</font><font color="#000000">(</font><font color="#000000">moisturevalue</font><font color="#434f54">,</font> <font color="#000000">4095</font><font color="#434f54">,</font> <font color="#000000">1700</font><font color="#434f54">,</font> <font color="#000000">10</font><font color="#434f54">,</font> <font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font>
-
  &nbsp;<font color="#00979c">int</font> <font color="#000000">result</font> <font color="#434f54">=</font> <font color="#000000">dht11</font><font color="#434f54">.</font><font color="#000000">readTemperatureHumidity</font><font color="#000000">(</font><font color="#000000">temperature</font><font color="#434f54">,</font> <font color="#000000">humidity</font><font color="#000000">)</font><font color="#000000">;</font>
+
+ &nbsp;&nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">setCursor</font><font color="#000000">(</font><font color="#000000">0</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;Soil:&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#000000">moisturePercent</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;% &nbsp;&nbsp;&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+
+ &nbsp;
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">setCursor</font><font color="#000000">(</font><font color="#000000">0</font><font color="#434f54">,</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;T:&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#000000">temperature</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;C &#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;H:&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#000000">humidity</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;%&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+
 
 
  &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#000000">F</font><font color="#000000">(</font><font color="#005c5f">&#34;\nSending Humidity val &#34;</font><font color="#000000">)</font><font color="#000000">)</font><font color="#000000">;</font>
@@ -388,15 +469,20 @@
  &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">pump</font><font color="#434f54">,</font><font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
  &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">buzzer</font><font color="#434f54">,</font><font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
  &nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">green</font><font color="#434f54">,</font><font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;&nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;WATERING&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">setCursor</font><font color="#000000">(</font><font color="#000000">12</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;ON &#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;PUMP: ON (Soil Dry)&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
  &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
  &nbsp;&nbsp;<font color="#5e6d03">else</font><font color="#000000">{</font>
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#000000">F</font><font color="#000000">(</font><font color="#005c5f">&#34;CLose pump &#34;</font><font color="#000000">)</font><font color="#000000">)</font><font color="#000000">;</font>
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">buzzer</font><font color="#434f54">,</font><font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">pump</font><font color="#434f54">,</font><font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">green</font><font color="#434f54">,</font><font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">setCursor</font><font color="#000000">(</font><font color="#000000">12</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;OFF&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;&nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;PUMP: OFF (Soil Wet)&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
  &nbsp;&nbsp;&nbsp;<font color="#000000">}</font> 
-
+ &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;-----------------------------------&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
  &nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">5000</font><font color="#000000">)</font><font color="#000000">;</font> 
 <font color="#000000">}</font>
 
@@ -425,11 +511,30 @@
 
 </pre>
 
+</pre>
+
 </pre>    
 </pre>
 </code>
 </pre>
-
+<section id="behindthescene">
+      <div class="container">
+            <div class="section-title">
+            <div  class="video1">
+                 <div>
+                     <h2>Videos of Project logical code embedding and building up </h2>
+                <div>
+                <div>
+                    <h1>Uploading Done</h1>
+                     <video width="720" height="480" controls>
+                     <source src="smart irrigation system.mp4" type="video/mp4">
+                     </video>
+                     <h4>Uploading Arduino codes in ESP32 microcontroller was successful done</h4>
+                </div>
+                
+            </div> 
+        </div>
+    </section>
         <p>
             The project can be powered using a battery or solar panel, making it suitable for remote agricultural areas.
             Future improvements could include IoT integration, smartphone control, and data logging.
