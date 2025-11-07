@@ -15,20 +15,20 @@
            
         }
         header {
-            background-color: #00992e;
-            color: rgb(163, 211, 86);
-            padding: 20px 0;
+            background-color: #196b3507;
+            color: rgb(255, 255, 255);
+            padding: 10px 0;
             text-align: center;
         }
         nav {
-            background: #4c9ddf;
-            color: rgb(131, 160, 144);
+            background: #6bf51b6e;
+            color: rgb(7, 255, 119);
             padding: 10px;
-            text-align: center;
+            text-align: ;
         }
         
         nav a {
-            color: rgb(255, 255, 255);
+            color: rgb(255, 254, 254);
             text-decoration: none;
             margin: 0 15px;
         }
@@ -57,7 +57,19 @@
         }
         
     </style>
+    <div style="
+  background-image: url('soil4.jpg');
+  background-size: cover;
+  background-position: center;
+  padding: 40px 20px;
+  color: rgb(64, 96, 116);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+">
 </head>
+ 
 <body>
 
     <header>
@@ -75,6 +87,7 @@
     </nav>
     </div>
     </div>
+   
 
       <div style="height:60%; text-align:center; padding:40px 20;" >
             <h1  style="color:rgb(72, 75, 71); line-height:1.4;"><u>PROJECT OWNERS</u></h1>
@@ -416,11 +429,11 @@ This ESP32-based system brings automation, IoT connectivity, and real-time monit
  &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
  &nbsp;<font color="#000000">}</font>
  &nbsp;
- &nbsp;<font color="#00979c">int</font> <font color="#000000">temperature</font> <font color="#434f54">=</font> <font color="#000000">dht11</font><font color="#434f54">.</font><font color="#d35400">readTemperature</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;<font color="#00979c">int</font> <font color="#000000">humidity</font> <font color="#434f54">=</font> <font color="#000000">dht11</font><font color="#434f54">.</font><font color="#d35400">readHumidity</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#00979c">int</font> <font color="#000000">temperature</font><font color="#434f54">=</font> <font color="#000000">dht11</font><font color="#434f54">.</font><font color="#d35400">readTemperature</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#00979c">int</font> <font color="#000000">humidity</font><font color="#434f54">=</font> <font color="#000000">dht11</font><font color="#434f54">.</font><font color="#d35400">readHumidity</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font>
  &nbsp;<font color="#00979c">int</font> <font color="#000000">moisturevalue</font><font color="#434f54">=</font><font color="#d35400">analogRead</font><font color="#000000">(</font><font color="#000000">sensor</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;<font color="#00979c">int</font> <font color="#000000">moisturePercent</font> <font color="#434f54">=</font> <font color="#d35400">map</font><font color="#000000">(</font><font color="#000000">moisturevalue</font><font color="#434f54">,</font> <font color="#000000">4095</font><font color="#434f54">,</font> <font color="#000000">1700</font><font color="#434f54">,</font> <font color="#000000">10</font><font color="#434f54">,</font> <font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font>
- &nbsp;<font color="#00979c">int</font> <font color="#000000">result</font> <font color="#434f54">=</font> <font color="#000000">dht11</font><font color="#434f54">.</font><font color="#000000">readTemperatureHumidity</font><font color="#000000">(</font><font color="#000000">temperature</font><font color="#434f54">,</font> <font color="#000000">humidity</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#00979c">int</font> <font color="#000000">moisturePercent</font><font color="#434f54">=</font> <font color="#d35400">map</font><font color="#000000">(</font><font color="#000000">moisturevalue</font><font color="#434f54">,</font> <font color="#000000">4095</font><font color="#434f54">,</font> <font color="#000000">1700</font><font color="#434f54">,</font> <font color="#000000">10</font><font color="#434f54">,</font> <font color="#000000">100</font><font color="#000000">)</font><font color="#000000">;</font>
+ &nbsp;<font color="#00979c">int</font> <font color="#000000">result</font><font color="#434f54">=</font> <font color="#000000">dht11</font><font color="#434f54">.</font><font color="#000000">readTemperatureHumidity</font><font color="#000000">(</font><font color="#000000">temperature</font><font color="#434f54">,</font> <font color="#000000">humidity</font><font color="#000000">)</font><font color="#000000">;</font>
 
  &nbsp;&nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">setCursor</font><font color="#000000">(</font><font color="#000000">0</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font>
  &nbsp;<font color="#000000">lcd</font><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;Soil:&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
@@ -533,24 +546,26 @@ This ESP32-based system brings automation, IoT connectivity, and real-time monit
             <div class="section-title">
             <div  class="video1">
                  <div>
-                     <h2>Videos of Project logical code embedding and building up </h2>
+                     <h2>The way we organized things is by assembling components on a PCB.</h2>
                 <div>
                 <div>
-                    <h1>Uploading Done</h1> 
+                     
                      <video width="720" height="480" controls>
-                     <source src="smart irrigation system.mp4" type="video/mp4">
+                     <source src="sample.mp4" type="video/mp4">
                      </video>
-                     <h4>Uploading Arduino codes in ESP32 microcontroller was successful done</h4>
+                     
                 </div>
                 
             </div> 
         </div>
     </section>
+
         <p style="font-size:15px ;">
             The project can be powered using a battery or solar panel, making it suitable for remote agricultural areas.
             Future improvements could include IoT integration, smartphone control, and data logging.
         </p>
     </section>
+    
 
     <footer>
         <p>&copy; 2025 Smart Irrigation System Project | All rights reserved.</p>
