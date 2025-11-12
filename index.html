@@ -120,13 +120,11 @@
          
         <h2>Project Introduction</h2>
         <p>
-            A Smart Irrigation System using ESP32 is a modern automatic watering system that helps farmers and gardeners manage water efficiently by using real-time data from environmental sensors. The main purpose of this system is to provide water to plants only when it is needed, reducing water waste and human effort.
+            A Smart Irrigation System is a modern way of watering plants automatically. Instead of depending on people to check the soil every day, this system uses simple sensors to know when the soil is dry and needs water. When the soil becomes too dry, the system turns on a small water pump to water the plants. After enough water is supplied, the pump goes off by itself.
 
-The ESP32 microcontroller is the core of this project because it has built-in Wi-Fi and Bluetooth, allowing the system to connect to the Internet of Things (IoT) platform. Through this connection, the system can send data about soil moisture, temperature, and humidity to an online dashboard such as Adafruit IO, where users can monitor the farm remotely and even control the pump from anywhere.
+This system also shows information like soil wetness, temperature, and humidity on a small screen, helping users understand the condition of their plants. It can even send this information to a phone or computer, allowing the user to monitor the farm from anywhere.
 
-The system works by using a soil moisture sensor to measure how wet or dry the soil is. When the moisture level falls below a certain threshold, the ESP32 automatically turns on the water pump. Once the soil becomes moist enough, the pump is turned off. A DHT11 sensor measures the surrounding temperature and humidity, helping users understand the environmental conditions affecting plant growth. The readings are displayed on an LCD (16x2) screen for local monitoring, and a buzzer gives alerts if soil moisture is too low.
-
-This ESP32-based system brings automation, IoT connectivity, and real-time monitoring into agriculture, making irrigation smarter, more efficient, and environmentally friendly. It demonstrates how embedded systems and IoT can be combined to support precision farming and sustainable agriculture.
+By saving time and reducing water waste, this smart irrigation system helps farmers and gardeners take care of their crops more easily, efficiently, and in an environmentally friendly way.
            
         </p>
          <section id="abstract">
@@ -147,8 +145,8 @@ This ESP32-based system brings automation, IoT connectivity, and real-time monit
         </p>
     </section>
     </section>
-        <p>IMAGE OF SMART IRRIGATION SYSTEM BLOCK DIAGRAM  DESIGNED IN EdrawMax </p>
-         <img src="Drawing1-removebg-preview.jpg" alt="System Setup">
+        <H1>SMART IRRIGATION SYSTEM BLOCK DIAGRAM</H1>
+         <img src="block diagram.jpg" alt="System Setup">
          <p>This SMART IRRIGATION SYSTEM BLOCK DIAGRAM shows a plan for an automatic plant watering system called "SIS." Think of it as a smart irrigation system. The whole system is powered by electricity, which is what the "POWER" block is for. The system uses two sensors to understand its environment: a "Soil Moisture Sensor" acts like a finger to check if the soil is dry, and a "DHT11" sensor acts like a tiny weather station to check the air temperature and humidity. All the information from these sensors is sent to the "ESP32," which is the brain of the operation. The brain makes all the decisions. If it decides the plants need water, it sends a command to the "Relay Circuit." You can think of the relay as a strong arm; the brain is smart but can't handle high power, so the relay does the heavy lifting of safely turning on the "Water Pump." Finally, the water pump is what actually waters the plants. So, in short, the system senses, thinks, and then acts completely on its own to keep plants perfectly watered.</p>
          <p>Code used before put in Iot</p>
         <per> 
@@ -322,6 +320,15 @@ This ESP32-based system brings automation, IoT connectivity, and real-time monit
          <p>SOIL MOISTURE USED</p>
         <img src="soil moisture.jpeg" alt="System Setup">
         <p>This soil moisture help to maintain optimal conditions for plant growth and ecosystem functioning</p>
+        <p>TRANSISTOR USED</p>
+        <img src="Transistor (1).jpg" alt="System Setup">
+        <p>This transistor is used for switching, where it can turn a current on or off, and amplification</p>
+         <p>RESISTOR USED</p>
+        <img src="resistor.jpg" alt="System Setup">
+        <p>This resistor is used to limit the current flow in an electronic circuit</p>
+          <p>LED AND BUZZER USED</p>
+        <img src="LED and Buzzer.jpg" alt="System Setup">
+        <p>This LED and buzzer are used for indicating the status of the system</p>
     </ul>
 <P>The code we used to upload our project to adafruit io</P>
 <pre>
