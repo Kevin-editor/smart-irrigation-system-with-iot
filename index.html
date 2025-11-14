@@ -537,7 +537,35 @@ By saving time and reducing water waste, this smart irrigation system helps farm
 </pre>
 </code>
 </pre> 
+ <button type="button" id="download" 
+  class="bg-blue-600 text-white text-center font-semibold px-6 py-3 rounded-2xl shadow-md hover:bg-blue-700 transition duration-300">
+  DOUNLOAD CODE
+</button>
 
+<script>
+const button = document.getElementById('download');
+
+button.addEventListener('click', async () => {
+  const url = 'https://raw.githubusercontent.com/Kevin-editor/smart-irrigation-system-with-iot/refs/heads/main/smart_irrigation_system_in_adafruit2/smart_irrigation_system_in_adafruit2.ino';
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Network response was not ok');
+
+    const blob = await response.blob();
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'smart_irrigation_system_in_adafruit2.ino';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    window.URL.revokeObjectURL(link.href);
+  } catch (err) {
+    alert('Failed to download file: ' + err.message);
+  }
+});
+</script>
 
 
 <p style="font-size:15px ;">After sending this code to the esp32 serial monitor, 
